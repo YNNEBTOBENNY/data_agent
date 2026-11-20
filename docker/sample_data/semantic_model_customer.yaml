@@ -1,0 +1,12 @@
+# 客户维度语义模型（样例）
+# 对应 docker/sample_data 中的 dim_customers 表
+model: customer_model
+table: dim_customers
+
+dimensions:
+  - business_name: 会员等级
+    physical: vip_level
+  - business_name: 客户姓名
+    physical: customer_name
+  - business_name: 客户城市
+    physical: city

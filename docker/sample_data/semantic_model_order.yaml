@@ -1,0 +1,43 @@
+# 电商订单语义模型（样例）
+# 对应 docker/sample_data 中的 fact_orders 表
+model: order_model
+table: fact_orders
+
+columns:
+  - business_name: 订单金额
+    physical: order_amount
+    type: decimal
+    unit: 元
+  - business_name: 下单时间
+    physical: order_time
+    type: datetime
+  - business_name: 订单状态
+    physical: status
+    type: varchar
+
+measures:
+  - business_name: 营收
+    expression: SUM(order_amount)
+    description: 所有已支付订单金额之和
+  - business_name: 订单数
+    expression: COUNT(*)
+    description: 订单总量
+  - business_name: 客单价
+    expression: AVG(order_amount)
+    description: 平均每单金额
+
+dimensions:
+  - business_name: 地区
+    physical: region
+    hierarchy: [地区, 省, 市, 门店]
+  - business_name: 省
+    physical: province
+  - business_name: 市
+    physical: city
+  - business_name: 门店
+    physical: store
+
+joins:
+  - model: customer_model
+    key: customer_id
+    direction: left

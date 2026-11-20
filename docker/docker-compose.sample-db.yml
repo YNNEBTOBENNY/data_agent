@@ -1,0 +1,32 @@
+# 样例数据库（开发联调用）
+# 注意：本环境为嵌套 Docker，必须用 host 网络（bridge 端口映射在嵌套环境下不通）。
+# MySQL 监听 3306，PostgreSQL 监听 5434（5432 已被其他服务占用）。
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: da_mysql
+    network_mode: host
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pw
+      MYSQL_DATABASE: ecommerce
+      TZ: UTC
+    volumes:
+      - ./sample_data/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: --skip-name-resolve --default-time-zone=+00:00
+
+  postgres:
+    image: postgres:15
+    container_name: da_postgres
+    network_mode: host
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root_pw
+      POSTGRES_DB: ecommerce
+      TZ: UTC
+    volumes:
+      - ./sample_data/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: -c port=5434
+
+# 连接信息（只读账号）：
+#   MySQL     : host=127.0.0.1 port=3306 db=ecommerce user=readonly password=readonly_pw
+#   PostgreSQL: host=127.0.0.1 port=5434 db=ecommerce user=readonly password=readonly_pw
